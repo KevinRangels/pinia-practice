@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import LoadingModal  from '@/shared/components/LoadingModal.vue';
+import { useRoute } from 'vue-router';
+import useClient from '../composables/useClient';
 
+const route = useRoute()
+const { client, isLoading } = useClient(+route.params.id)
         
 </script>
         
@@ -8,7 +12,7 @@ import LoadingModal  from '@/shared/components/LoadingModal.vue';
    <h3>Guardando...</h3>+
    <h3>Guardado</h3>
 
-   <LoadingModal v-if="false"/>
+   <LoadingModal v-if="isLoading"/>
 
    <div>
     <h1>Kevin Rangel</h1>
@@ -20,7 +24,7 @@ import LoadingModal  from '@/shared/components/LoadingModal.vue';
     </form>
    </div>
    <code>
-    Toda la info del cliente
+    {{ client }}
    </code>
 </template>
 
