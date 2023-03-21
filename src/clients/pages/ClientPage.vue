@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import LoadingModal  from '@/shared/components/LoadingModal.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useClient from '../composables/useClient';
 import type { Client } from '../interfaces/client';
 import clientsApi from '../../api/clients-api';
 import { watch } from 'vue';
 
 const route = useRoute()
+const router = useRouter()
 const queryClient = useQueryClient()
 
-const { client, isLoading } = useClient(+route.params.id)
+const { client, isLoading, isError } = useClient(+route.params.id)
 
 const updatedClient = async(client: Client):Promise<Client> => {
 
@@ -37,6 +38,12 @@ watch(clientMutation.isSuccess, () => {
     setTimeout(() => {
         clientMutation.reset()
     }, 2000);
+})
+
+watch(isError, () => {
+    if (isError.value) {
+        router.replace('/clients')
+    }
 })
         
 </script>
