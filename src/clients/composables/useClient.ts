@@ -1,10 +1,15 @@
-import { useQuery } from "@tanstack/vue-query"
-import { ref, watch } from 'vue';
+import { useQuery, useMutation } from '@tanstack/vue-query';
+import { ref, watch, computed } from 'vue';
 import type { Client } from "../interfaces/client"
 import clientsApi from '../../api/clients-api';
 
 const getClient = async(id: number):Promise<Client> => {
     const { data } = await clientsApi.get(`/clients/${id}`)
+    return data
+}
+
+const updatedClient = async(client: Client):Promise<Client> => {
+    const { data } = await clientsApi.patch<Client>(`/clients/${client.id}`, client)
     return data
 }
 
@@ -20,6 +25,12 @@ const useClient = (id: number) => {
         }
     )
 
+    const clientMutation = useMutation( updatedClient, {
+        onSuccess(data) {
+            console.log({data});
+        }
+    } )
+
     watch(data, () => {
         if (data.value)
             client.value = {...data.value}
@@ -29,6 +40,9 @@ const useClient = (id: number) => {
         client,
         isError,
         isLoading,
+        clientMutation,
+
+        isUpdating: computed(() => clientMutation.isLoading.value) // forma de pasarlo mas limpio
     }
 }
 

@@ -9,30 +9,30 @@ import { watch } from 'vue';
 
 const route = useRoute()
 const router = useRouter()
-const queryClient = useQueryClient()
+// const queryClient = useQueryClient()
 
-const { client, isLoading, isError } = useClient(+route.params.id)
+const { client, isLoading, isError, clientMutation } = useClient(+route.params.id)
 
-const updatedClient = async(client: Client):Promise<Client> => {
+// const updatedClient = async(client: Client):Promise<Client> => {
 
-    // await new Promise( resolve => {
-    //     setTimeout(() => {
-    //         resolve(true)
-    //     }, 2000);
-    // })
+//     // await new Promise( resolve => {
+//     //     setTimeout(() => {
+//     //         resolve(true)
+//     //     }, 2000);
+//     // })
 
-    const { data } = await clientsApi.patch<Client>(`/clients/${client.id}`, client)
-    const queries = queryClient.getQueryCache().findAll(['clients?page='], {exact: false}) //Buscar todos los queries que tengan ese nombre
-    // queries.forEach(query => query.reset()) // Borra todas la queries en cache
-    queries.forEach(query => query.fetch()) // Actualiza todas la queries en cache
-    return data
-}
+//     const { data } = await clientsApi.patch<Client>(`/clients/${client.id}`, client)
+//     const queries = queryClient.getQueryCache().findAll(['clients?page='], {exact: false}) //Buscar todos los queries que tengan ese nombre
+//     // queries.forEach(query => query.reset()) // Borra todas la queries en cache
+//     queries.forEach(query => query.fetch()) // Actualiza todas la queries en cache
+//     return data
+// }
 
-const clientMutation = useMutation( updatedClient, {
-    onSuccess(data) {
-        console.log({data});
-    }
-} )
+// const clientMutation = useMutation( updatedClient, {
+//     onSuccess(data) {
+//         console.log({data});
+//     }
+// } )
 
 watch(clientMutation.isSuccess, () => {
     setTimeout(() => {
